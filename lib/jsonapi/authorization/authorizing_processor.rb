@@ -237,7 +237,7 @@ module JSONAPI
           .send(:_model_class_name, params[:key_type])
 
         # Fetch the underlying Resource class for the new record to-be-associated
-        related_resource_klass = @resource_klass.resource_for(related_record_class_name)
+        related_resource_klass = @resource_klass.resource_klass_for(related_record_class_name)
 
         new_related_resource = related_resource_klass
           .find_by_key(
@@ -288,7 +288,7 @@ module JSONAPI
           data[rel_type].flat_map do |assoc_name, assoc_value|
             case assoc_value
             when Hash # polymorphic relationship
-              resource_class = @resource_klass.resource_for(assoc_value[:type].to_s)
+              resource_class = @resource_klass.resource_klass_for(assoc_value[:type].to_s)
               resource_class.find_by_key(assoc_value[:id], context: context)._model
             else
               resource_class = resource_class_for_relationship(assoc_name)
@@ -310,7 +310,7 @@ module JSONAPI
               when nil
                 nil
               when Hash # polymorphic relationship
-                resource_class = @resource_klass.resource_for(assoc_value[:type].to_s)
+                resource_class = @resource_klass.resource_klass_for(assoc_value[:type].to_s)
                 resource_class.find_by_key(assoc_value[:id], context: context)._model
               when Array
                 resource_class = resource_class_for_relationship(assoc_name)
